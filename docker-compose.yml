@@ -16,7 +16,7 @@ services:
   app:
     build: .
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/taskmanager?schema=public"
+      DATABASE_URL: "postgresql://neondb_owner:npg_2BltfHGyTzD7@ep-spring-scene-a1fx8g7u-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
       JWT_SECRET: "your-strong-secret-here"
     ports:
       - "8000:8000"

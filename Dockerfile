@@ -1,25 +1,23 @@
-# Stage 1: Build the app
-FROM node:18-alpine AS builder
+# Stage 1: Build
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 COPY package*.json ./
+COPY prisma ./prisma/
+
 RUN npm ci
+RUN npx prisma generate
+
 COPY . .
 RUN npm run build
 
-# Stage 2: Run the app
-FROM node:18-alpine
-
+# Stage 2: Run
+FROM node:20-alpine
 WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/generated/prisma ./
 
-# Install Prisma (for database)
-RUN npm install -g prisma
-COPY prisma ./prisma
-RUN npx prisma generate
-
-# Expose port and start the app
 EXPOSE 8000
 CMD ["npm", "run", "start:prod"]
