@@ -1,0 +1,30 @@
+
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskmanager
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # NestJS App
+  app:
+    build: .
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/taskmanager?schema=public"
+      JWT_SECRET: "your-strong-secret-here"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
