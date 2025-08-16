@@ -9,7 +9,7 @@ COPY prisma ./prisma/
 
 # Install dependencies and generate Prisma client
 RUN npm ci
-RUN npx prisma generate
+RUN mkdir -p /app/generated && npx prisma generate
 
 # Copy all files and build
 COPY . .
@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/generated ./generated ./
+COPY --from=builder /app/generated ./generated
 COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 8000
